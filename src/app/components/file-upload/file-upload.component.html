@@ -1,0 +1,74 @@
+<div class="row">
+
+    <ngx-dropzone [multiple]="false" (change)="onSelect($event)" accept="video/*,audio/*">
+        <ngx-dropzone-label>Upload a video or audio file</ngx-dropzone-label>
+        <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-preview>
+    </ngx-dropzone>
+
+    <!-- <div class="mb-3">
+        <label for="formFile" class="form-label">Upload a video or audio file</label>
+        <input class="form-control" type="file" id="formFile" accept="video/*">
+      </div> -->
+</div>
+<div class="row pt-2">
+    <button type="button" class="btn btn-primary mt-auto" (click)="openModal(template)"
+        style="width: 10%;">Preview</button>
+
+    <ng-template #template>
+        <div class="modal-header">
+            <h4 class="modal-title pull-left">Preview</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modalRef.hide()"></button>
+        </div>
+        <div class="modal-body">
+            <div *ngIf="files.length > 0; else noMedia">
+                <div *ngIf="files[0].type.includes('video'); else audioPlayer">
+                    <vg-player>
+
+                        <vg-overlay-play></vg-overlay-play>
+                        <vg-buffering></vg-buffering>
+
+                        <vg-scrub-bar>
+                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                        </vg-scrub-bar>
+
+                        <vg-controls>
+                            <vg-play-pause></vg-play-pause>
+                            <vg-playback-button></vg-playback-button>
+
+                            <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                            <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
+
+                            <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                            <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                            <vg-mute></vg-mute>
+                            <vg-volume></vg-volume>
+
+                            <vg-fullscreen></vg-fullscreen>
+                        </vg-controls>
+
+                        <video #media [vgMedia]="$any(media)" id="singleVideo" preload="auto">
+                            <source [src]="file" [type]="files[0].type">
+                        </video>
+
+                    </vg-player>
+                </div>
+                <ng-template #audioPlayer>
+                    <audio controls>
+                        <source [src]="file" [type]="files[0].type">
+                    </audio>
+                </ng-template>
+
+            </div>
+            <ng-template #noMedia>
+                <div>
+                    <p>Please upload a file to preview</p>
+                </div>
+            </ng-template>
+        </div>
+    </ng-template>
+</div>
